@@ -1,8 +1,8 @@
 Pyle
-------
+====
 
 Use Python for sed-like shell scripts
-=====================================
+-------------------------------------
 
 Pyle makes it easy to use Python as a replacement for command line tools such as `sed` or `perl`. For instance, to perform an in-place string substitution, overwriting the original file with the updated file, you might do:
 
@@ -40,6 +40,10 @@ Download `pyle.py` and put it in your path. Give it the executable bit.
 
     sudo mv pyle.py /usr/local/bin/pyle
     sudo chmod +x /usr/local/bin/pyle
+
+## Documentation ##
+
+See `pyle --help`.
 
 ## License ##
 
