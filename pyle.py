@@ -10,7 +10,8 @@ file is read and processed in order. The variables `line`, representing the
 current input line being processed, `words`, representing the current
 line split by whitespace, `num`, the 0 index line number in the current
 file, and `filename`, the name of the current file, are available to the
-expression. In addition the `re` module is available.
+expression. In addition the `re` module is available. To supress printing
+of a line, return None.
 
 """
 
@@ -54,6 +55,9 @@ def pyle_evaluate(command=None, modules=None, inplace=False, files=None):
                 except Exception:
                     traceback.print_exc(None, sys.stderr)
                 else:
+                    if out_line is None:
+                        continue
+
                     # If the result is something list-like or iterable, output each item space separated.
                     if out_line is not None and not isinstance(out_line, str):
                         try:
