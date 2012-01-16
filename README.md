@@ -32,6 +32,10 @@ If your expression returns a list or a tuple, the items will be printed joined b
     348e4a65e24bab4eed8e2bbe6f4c8176ddec60051d1918eea38b34b1103a8af6 pyle.py
     b28c7f73e6df990a96cfb724be1d673c2d3c43f68d4b6c06d8e5a9b29e5d12cb pyle_test.py
 
+Print the first five lines of each file with filenames and line numbers:
+
+    $ pyle -e "'%-15s:%04d %s' % (filename, 1 + num, line) if num < 5 else None" *.py
+
 The idea for Pyle is based on Graham Fawcett's [PyLine](http://code.activestate.com/recipes/437932-pyle-a-grep-like-sed-like-command-line-tool/). Pyle is mostly compatible with PyLine but requires a `-e` before the evaluation statement.
 
 ## Installation ##
