@@ -7,9 +7,10 @@ as `sed` or `perl`. It reads its standard input and evaluates each line with
 the expression specified, outputting the results on standard out.
 Optionally, it can operate on a list of filenames instead in which case each
 file is read and processed in order. The variables `line`, representing the
-current input line being processed, and `words`, representing the current
-line split by whitespace, are available to the expression. In addition the
-`re` module is available.
+current input line being processed, `words`, representing the current
+line split by whitespace, `num`, the 0 index line number in the current
+file, and `filename`, the name of the current file, are available to the
+expression. In addition the `re` module is available.
 
 """
 
@@ -44,10 +45,10 @@ def pyle_evaluate(command=None, modules=None, inplace=False, files=None):
         out_buf = sys.stdout if not inplace else StringIO.StringIO()
 
         with (open(file, 'rb') if not hasattr(file, 'read') else file) as in_file:
-            for line in in_file.readlines():
+            for num, line in enumerate(in_file.readlines()):
                 line = line[:-1]
                 words = [word.strip() for word in re.split(r'\s+', line) if word]
-                eval_locals = {'line': line, 'words': words}
+                eval_locals = {'line': line, 'words': words, 'filename': in_file.name, 'num': num}
                 try:
                     out_line = eval(command, eval_globals, eval_locals)
                 except Exception:
