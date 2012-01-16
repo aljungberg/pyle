@@ -2,10 +2,14 @@
 
 """
 
-Pyle is a tool that makes it easy to use Python as a replacement for command line tools such as `sed` or `perl`.
-It reads its standard input and evaluates each line with the command specified, outputting the results on standard
-out. Optionally, it can operate on a list of filenames instead in which case each file is read and processed in
-order.
+Pyle allows you to use Python as a replacement for command line tools such
+as `sed` or `perl`. It reads its standard input and evaluates each line with
+the expression specified, outputting the results on standard out.
+Optionally, it can operate on a list of filenames instead in which case each
+file is read and processed in order. The variables `line`, representing the
+current input line being processed, and `words`, representing the current
+line split by whitespace, are available to the expression. In addition the
+`re` module is available.
 
 """
 

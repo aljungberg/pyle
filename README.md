@@ -43,7 +43,7 @@ Download `pyle.py` and put it in your path. Give it the executable bit.
 
 ## Documentation ##
 
-See `pyle --help`.
+This file and `pyle --help`.
 
 ## License ##
 
