@@ -59,7 +59,7 @@ def pyle_evaluate(command=None, modules=None, inplace=False, files=None):
                         continue
 
                     # If the result is something list-like or iterable, output each item space separated.
-                    if out_line is not None and not isinstance(out_line, str):
+                    if not isinstance(out_line, str):
                         try:
                             out_line = u' '.join(unicode(part) for part in out_line)
                         except:
