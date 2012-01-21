@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 """
 
@@ -67,7 +68,8 @@ def pyle_evaluate(command=None, modules=None, inplace=False, files=None):
                             out_line = unicode(out_line)
 
                     out_line = out_line or u''
-                    out_buf.write(out_line + u'\n')
+                    out_buf.write(out_line)
+                    out_buf.write('\n')
         if inplace:
             with open(file, 'wb') as out_file:
                 out_file.write(out_buf.getvalue())

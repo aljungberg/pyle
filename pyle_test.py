@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from subprocess import Popen, PIPE, STDOUT
 import tempfile
 import unittest
@@ -76,3 +79,8 @@ short
 This line protected by cowboys.
 An angel? This box is FILLED with angels!"
 """)
+
+    def testUtf(self):
+        test_str = 'Segla f\xf6rutan vind\n'
+        output = self.std_run('line', test_str)
+        self.assertEquals(output, test_str)
