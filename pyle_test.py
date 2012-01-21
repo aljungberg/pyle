@@ -29,8 +29,7 @@ class TestPyle(unittest.TestCase):
 
         self.assertEquals(output, """A few
 dance
-short
-""")
+short""")
 
     def testFirst5FromFile(self):
         tmp_file = tempfile.NamedTemporaryFile(delete=False)
@@ -43,8 +42,7 @@ short
 
             self.assertEquals(output, """A few
 dance
-short
-""")
+short""")
         finally:
             os.unlink(tmp_file.name)
 
@@ -70,8 +68,7 @@ short
         output = self.in_place_run('line[:5]', test_input_a)
         self.assertEquals(output, """A few
 dance
-short
-""")
+short""")
 
     def testAliens(self):
         output = self.in_place_run(r"re.sub(r'alien(s|)?', r'angel\1', line)", test_input_b)
@@ -84,3 +81,9 @@ An angel? This box is FILLED with angels!"
         test_str = 'Segla f\xf6rutan vind\n'
         output = self.std_run('line', test_str)
         self.assertEquals(output, test_str)
+
+    def testBinary(self):
+        test_str = '\x00\x01\x02'
+        output = self.std_run('line', test_str)
+        self.assertEquals(output, test_str)
+

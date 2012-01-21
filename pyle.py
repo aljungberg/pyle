@@ -48,7 +48,10 @@ def pyle_evaluate(command=None, modules=None, inplace=False, files=None):
 
         with (open(file, 'rb') if not hasattr(file, 'read') else file) as in_file:
             for num, line in enumerate(in_file.readlines()):
-                line = line[:-1]
+                was_whole_line = False
+                if line[-1] == '\n':
+                    was_whole_line = True
+                    line = line[:-1]
                 words = [word.strip() for word in re.split(r'\s+', line) if word]
                 eval_locals = {'line': line, 'words': words, 'filename': in_file.name, 'num': num}
                 try:
@@ -69,7 +72,8 @@ def pyle_evaluate(command=None, modules=None, inplace=False, files=None):
 
                     out_line = out_line or u''
                     out_buf.write(out_line)
-                    out_buf.write('\n')
+                    if was_whole_line:
+                        out_buf.write('\n')
         if inplace:
             with open(file, 'wb') as out_file:
                 out_file.write(out_buf.getvalue())
