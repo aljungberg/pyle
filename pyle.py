@@ -25,7 +25,12 @@ import traceback
 STANDARD_MODULES = ['re']
 
 
-def pyle_evaluate(command=None, modules=None, inplace=False, files=None):
+def truncate_ellipsis(line, length=30):
+    l = len(line)
+    return line if l < length else line[:length - 3] + "..."
+
+
+def pyle_evaluate(command=None, modules=None, inplace=False, files=None, print_traceback=False):
     eval_globals = {}
 
     modules = STANDARD_MODULES + (modules or [])
@@ -56,8 +61,10 @@ def pyle_evaluate(command=None, modules=None, inplace=False, files=None):
                 eval_locals = {'line': line, 'words': words, 'filename': in_file.name, 'num': num}
                 try:
                     out_line = eval(command, eval_globals, eval_locals)
-                except Exception:
-                    traceback.print_exc(None, sys.stderr)
+                except Exception as e:
+                    sys.stderr.write("At %s:%d ('%s'): %s\n" % (in_file.name, num, truncate_ellipsis(line), e))
+                    if print_traceback:
+                        traceback.print_exc(None, sys.stderr)
                 else:
                     if out_line is None:
                         continue
@@ -91,10 +98,12 @@ def pyle(argv=None):
         help="the statement to evaluate on each line")
     parser.add_argument('files', nargs='*',
         help="files to read as input. If used with --inplace, the files will be replaced with the output")
+    parser.add_argument("--traceback", action="store_true", default=False,
+        help="print a traceback on stderr when an expression fails for a line")
 
     args = parser.parse_args() if not argv else parser.parse_args(argv)
 
-    pyle_evaluate(args.expression, args.modules, args.inplace, args.files)
+    pyle_evaluate(args.expression, args.modules, args.inplace, args.files, args.traceback)
 
 if __name__ == '__main__':
     pyle()
