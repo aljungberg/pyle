@@ -17,10 +17,12 @@ An alien? This box is FILLED with aliens!"
 
 
 class TestPyle(unittest.TestCase):
-    def std_run(self, code, input_string, modules=None):
+    def std_run(self, code, input_string, modules=None, print_traceback=False):
         cmd = ['python', 'pyle.py', '-e', code]
         if modules:
             cmd += ['-m'] + [modules]
+        if print_traceback:
+            cmd += ['--traceback']
         p = Popen(cmd, stdout=PIPE, stdin=PIPE, stderr=STDOUT)
         return p.communicate(input=input_string)[0]
 
@@ -86,4 +88,21 @@ An angel? This box is FILLED with angels!"
         test_str = '\x00\x01\x02'
         output = self.std_run('line', test_str)
         self.assertEquals(output, test_str)
+
+    def testErrorMessage(self):
+        output = self.std_run('int(line)', "1\nPylo\n3\n")
+        self.assertEquals(output, "1\nAt <stdin>:1 ('Pylo'): invalid literal for int() with base 10: 'Pylo'\n3\n")
+
+    def testTraceback(self):
+        output = self.std_run('int(line)', "1\nPylo\n3\n", print_traceback=True)
+        self.assertEquals(output, """1
+At <stdin>:1 ('Pylo'): invalid literal for int() with base 10: 'Pylo'
+Traceback (most recent call last):
+  File "pyle.py", line 63, in pyle_evaluate
+    out_line = eval(command, eval_globals, eval_locals)
+  File "<string>", line 1, in <module>
+ValueError: invalid literal for int() with base 10: 'Pylo'
+3
+""")
+
 
