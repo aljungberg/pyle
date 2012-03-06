@@ -62,6 +62,7 @@ def pyle_evaluate(command=None, modules=None, inplace=False, files=None, print_t
                 try:
                     out_line = eval(command, eval_globals, eval_locals)
                 except Exception as e:
+                    sys.stdout.flush()
                     sys.stderr.write("At %s:%d ('%s'): %s\n" % (in_file.name, num, truncate_ellipsis(line), e))
                     if print_traceback:
                         traceback.print_exc(None, sys.stderr)
