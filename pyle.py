@@ -16,6 +16,8 @@ of a line, return None.
 
 """
 
+__version__ = "0.1"
+
 import argparse
 import cStringIO as StringIO
 import re
