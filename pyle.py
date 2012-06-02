@@ -28,11 +28,15 @@ STANDARD_MODULES = ['re']
 
 
 def truncate_ellipsis(line, length=30):
+    """Truncate a line to the specified length followed by ``...`` unless its shorter than length already."""
+
     l = len(line)
     return line if l < length else line[:length - 3] + "..."
 
 
 def pyle_evaluate(command=None, modules=None, inplace=False, files=None, print_traceback=False):
+    """The main method of pyle."""
+
     eval_globals = {}
 
     modules = STANDARD_MODULES + (modules or [])
@@ -91,6 +95,8 @@ def pyle_evaluate(command=None, modules=None, inplace=False, files=None, print_t
 
 
 def pyle(argv=None):
+    """Execute pyle with the specified arguments, or sys.argv if no arguments specified."""
+
     parser = argparse.ArgumentParser(description=__doc__)
 
     parser.add_argument("-m", "--modules", dest="modules", action='append',
