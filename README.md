@@ -40,10 +40,7 @@ The idea for Pyle is based on Graham Fawcett's [PyLine](http://code.activestate.
 
 ## Installation ##
 
-Download `pyle.py` and put it in your path. Give it the executable bit.
-
-    sudo mv pyle.py /usr/local/bin/pyle
-    sudo chmod +x /usr/local/bin/pyle
+    pip install pyle
 
 ## Why Pyle? ##
 
