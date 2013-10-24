@@ -1,7 +1,7 @@
 from distutils.core import setup
 
 setup(name='pyle',
-      version='0.1',
+      version='0.2',
       description='Use Python for shell one-liners.',
       author='Alexander Ljungberg',
       author_email='aljungberg@slevenbits.com',
@@ -83,6 +83,7 @@ evaluation statement.
 """,
       install_requires=[
         'argparse >= 1.2.1',
+        'sh >= 1.0.9',
       ],
 
       )

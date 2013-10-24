@@ -16,6 +16,12 @@ or:
 
     pyle -e "line[:20]" README.md
 
+Pyle imports the (sh)[https://pypi.python.org/pypi/sh] module by default, which allows running child commands easily.
+
+List all `/tmp/` files with a filename with an even length:
+
+    ls /tmp/ | pyle -e "sh.ls('-l', line) if len(line) % 2 == 0 else None"
+
 In addition to `line`, a list called `words` is also available which is the current line split by whitespace. To print just the URLs in an Apache access log (the seventh "word" in the line):
 
     tail access_log | pyle -e "words[6]"
