@@ -80,5 +80,9 @@ The idea for Pyle is based on Graham Fawcett's
 `PyLine <http://code.activestate.com/recipes/437932-pyle-a-grep-like-sed-like-command-line-tool/>`_.
 Pyle is mostly compatible with PyLine but requires a ``-e`` before the
 evaluation statement.
-"""
+""",
+      install_requires=[
+        'argparse >= 1.2.1',
+      ],
+
       )
