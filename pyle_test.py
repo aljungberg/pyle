@@ -95,15 +95,5 @@ An angel? This box is FILLED with angels!"
 
     def testTraceback(self):
         output = self.std_run('int(line)', "1\nPylo\n3\n", print_traceback=True)
-        # FIXME This test shouldn't depend on source code line numbers to succeed.
-        self.assertEquals(output, """1
-At <stdin>:1 ('Pylo'): invalid literal for int() with base 10: 'Pylo'
-Traceback (most recent call last):
-  File "pyle.py", line 69, in pyle_evaluate
-    out_line = eval(command, eval_globals, eval_locals)
-  File "<string>", line 1, in <module>
-ValueError: invalid literal for int() with base 10: 'Pylo'
-3
-""")
-
-
+        self.assertTrue("invalid literal for int() with base 10" in output)
+        self.assertTrue("Traceback (most recent call last)" in output)
