@@ -95,7 +95,7 @@ An angel? This box is FILLED with angels!"
 
     def testErrorMessage(self):
         output = self.std_run('int(line)', "1\nPylo\n3\n")
-        self.assertEquals(output, "1\nAt <stdin>:1 ('Pylo'): invalid literal for int() with base 10: 'Pylo'\n3\n")
+        self.assertEquals(output, "1\nAt <stdin>:1 ('Pylo'): `int(line)`: invalid literal for int() with base 10: 'Pylo'\n3\n")
 
     def testTraceback(self):
         output = self.std_run('int(line)', "1\nPylo\n3\n", print_traceback=True)

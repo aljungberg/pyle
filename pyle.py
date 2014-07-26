@@ -47,7 +47,7 @@ def truncate_ellipsis(line, length=30):
     return line if l < length else line[:length - 3] + "..."
 
 
-def pyle_evaluate(command=None, modules=(), inplace=False, files=None, print_traceback=False):
+def pyle_evaluate(expressions=None, modules=(), inplace=False, files=None, print_traceback=False):
     """The main method of pyle."""
 
     eval_globals = {}
@@ -60,9 +60,9 @@ def pyle_evaluate(command=None, modules=(), inplace=False, files=None, print_tra
             if module:
                 eval_globals[module] = __import__(module)
 
-    if not command:
+    if not expressions:
         # Default 'do nothing' program
-        command = 'line'
+        expressions = ['line']
 
     files = files or ['-']
     eval_locals = {}
@@ -78,26 +78,41 @@ def pyle_evaluate(command=None, modules=(), inplace=False, files=None, print_tra
                 if line[-1] == '\n':
                     was_whole_line = True
                     line = line[:-1]
-                words = [word.strip() for word in re.split(r'\s+', line) if word]
-                eval_locals.update({'line': line, 'words': words, 'filename': in_file.name, 'num': num})
                 try:
-                    out_line = eval(command, eval_globals, eval_locals)
+                    for expr in expressions:
+                        words = [word.strip()
+                                 for word in re.split(r'\s+', line)
+                                 if word]
+                        eval_locals.update({
+                            'line': line, 'words': words,
+                            'filename': in_file.name, 'num': num
+                            })
+
+                        out_line = eval(expr, eval_globals, eval_locals)
+
+                        if out_line is None:
+                            continue
+
+                        # If the result is something list-like or iterable,
+                        # output each item space separated.
+                        if not isinstance(out_line, str):
+                            try:
+                                out_line = u' '.join(unicode(part)
+                                                     for part in out_line)
+                            except:
+                                # Guess it wasn't a list after all.
+                                out_line = unicode(out_line)
+
+                        line = out_line
                 except Exception as e:
                     sys.stdout.flush()
-                    sys.stderr.write("At %s:%d ('%s'): %s\n" % (in_file.name, num, truncate_ellipsis(line), e))
+                    sys.stderr.write("At %s:%d ('%s'): `%s`: %s\n" % (
+                        in_file.name, num, truncate_ellipsis(line), expr, e))
                     if print_traceback:
                         traceback.print_exc(None, sys.stderr)
                 else:
                     if out_line is None:
                         continue
-
-                    # If the result is something list-like or iterable, output each item space separated.
-                    if not isinstance(out_line, str):
-                        try:
-                            out_line = u' '.join(unicode(part) for part in out_line)
-                        except:
-                            # Guess it wasn't a list after all.
-                            out_line = unicode(out_line)
 
                     out_line = out_line or u''
                     out_buf.write(out_line)
@@ -118,8 +133,8 @@ def pyle(argv=None):
         help="import MODULE before evaluation. May be specified more than once.")
     parser.add_argument("-i", "--inplace", dest="inplace", action='store_true', default=False,
         help="edit files in place. When used with file name arguments, the files will be replaced by the output of the evaluation")
-    parser.add_argument("-e", "--expression", dest="expression",
-        help="an expression to evaluate for each line")
+    parser.add_argument("-e", "--expression", action="append",
+        dest="expressions", help="an expression to evaluate for each line")
     parser.add_argument('files', nargs='*',
         help="files to read as input. If used with --inplace, the files will be replaced with the output")
     parser.add_argument("--traceback", action="store_true", default=False,
@@ -127,7 +142,8 @@ def pyle(argv=None):
 
     args = parser.parse_args() if not argv else parser.parse_args(argv)
 
-    pyle_evaluate(args.expression, args.modules, args.inplace, args.files, args.traceback)
+    pyle_evaluate(args.expressions, args.modules, args.inplace, args.files,
+                  args.traceback)
 
 if __name__ == '__main__':
     pyle()
