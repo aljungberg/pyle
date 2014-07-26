@@ -5,6 +5,7 @@ from subprocess import Popen, PIPE, STDOUT
 import tempfile
 import unittest
 import os
+import operator
 
 test_input_a = """A few characters
 dance on the
@@ -17,8 +18,11 @@ An alien? This box is FILLED with aliens!"
 
 
 class TestPyle(unittest.TestCase):
-    def std_run(self, code, input_string, modules=None, print_traceback=False):
+    def std_run(self, code, input_string, more_code=None, modules=None,
+                print_traceback=False):
         cmd = ['python', 'pyle.py', '-e', code]
+        if more_code:
+            cmd.extend(reduce(operator.add, [['-e', c] for c in more_code]))
         if modules:
             cmd += ['-m'] + [modules]
         if print_traceback:
@@ -97,3 +101,8 @@ An angel? This box is FILLED with angels!"
         output = self.std_run('int(line)', "1\nPylo\n3\n", print_traceback=True)
         self.assertTrue("invalid literal for int() with base 10" in output)
         self.assertTrue("Traceback (most recent call last)" in output)
+
+    def testMultiExpr(self):
+        output = self.std_run('re.sub("a", "B", line)', 'aaa',
+                              more_code=['re.sub("B", "c", line)', 'line[:2]'])
+        self.assertEquals(output, 'cc')
