@@ -42,6 +42,12 @@ Print the first five lines of each file with filenames and line numbers:
 
     $ pyle -e "'%-15s:%04d %s' % (filename, 1 + num, line) if num < 5 else None" *.py
 
+You can also specify multiple expressions by repeating the `-e` option.  Just
+like in `sed` each expression acts on `line` (and `words`, etc.) as modified by
+the previous expression. E.g. replace a letter in first five words of a file:
+
+    $ pyle -e "words[:5]" -e "re.sub('A', 'B', line)" README.md
+
 The idea for Pyle is based on Graham Fawcett's [PyLine](http://code.activestate.com/recipes/437932-pyle-a-grep-like-sed-like-command-line-tool/). Pyle is mostly compatible with PyLine but requires a `-e` before the evaluation statement.
 
 ## Installation ##
