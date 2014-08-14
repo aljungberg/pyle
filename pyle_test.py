@@ -5,6 +5,7 @@ from subprocess import Popen, PIPE, STDOUT
 import tempfile
 import unittest
 import os
+import sys
 
 test_input_a = """A few characters
 dance on the
@@ -18,7 +19,7 @@ An alien? This box is FILLED with aliens!"
 
 class TestPyle(unittest.TestCase):
     def std_run(self, code, input_string, modules=None, print_traceback=False):
-        cmd = ['python', 'pyle.py', '-e', code]
+        cmd = [sys.executable, 'pyle.py', '-e', code]
         if modules:
             cmd += ['-m'] + [modules]
         if print_traceback:
@@ -39,7 +40,7 @@ short""")
             tmp_file.write(test_input_a)
             tmp_file.close()
 
-            p = Popen(['python', 'pyle.py', '-e', 'line[:5]', tmp_file.name], stdout=PIPE, stdin=PIPE, stderr=STDOUT)
+            p = Popen([sys.executable, 'pyle.py', '-e', 'line[:5]', tmp_file.name], stdout=PIPE, stdin=PIPE, stderr=STDOUT)
             output = p.communicate()[0]
 
             self.assertEquals(output, """A few
@@ -54,7 +55,7 @@ short""")
             tmp_file.write(input_string)
             tmp_file.close()
 
-            p = Popen(['python', 'pyle.py', '-ie', code, tmp_file.name], stdout=PIPE, stdin=PIPE, stderr=STDOUT)
+            p = Popen([sys.executable, 'pyle.py', '-ie', code, tmp_file.name], stdout=PIPE, stdin=PIPE, stderr=STDOUT)
             output = p.communicate()[0]
 
             self.assertEquals(output, '')
