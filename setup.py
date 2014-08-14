@@ -1,7 +1,7 @@
 from distutils.core import setup
 
 setup(name='pyle',
-      version='0.2',
+      version='0.3',
       description='Use Python for shell one-liners.',
       author='Alexander Ljungberg',
       author_email='aljungberg@slevenbits.com',
