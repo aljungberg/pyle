@@ -89,6 +89,10 @@ An angel? This box is FILLED with angels!"
         output = self.std_run('line', test_str)
         self.assertEquals(output, test_str)
 
+    def test_unicode_output(self):
+        output = self.std_run('u"test"', "\n")
+        self.assertEquals(output, "test\n")
+
     def test_binary_input(self):
         test_str = '\x00\x01\x02'
         output = self.std_run('line', test_str)

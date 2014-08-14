@@ -79,6 +79,8 @@ def pyle_evaluate(expressions=None, modules=(), inplace=False, files=None, print
                 if line[-1] == '\n':
                     was_whole_line = True
                     line = line[:-1]
+
+                expr = ""
                 try:
                     for expr in expressions:
                         words = [word.strip()
@@ -96,7 +98,7 @@ def pyle_evaluate(expressions=None, modules=(), inplace=False, files=None, print
 
                         # If the result is something list-like or iterable,
                         # output each item space separated.
-                        if not isinstance(out_line, str):
+                        if not isinstance(out_line, str) and not isinstance(out_line, unicode):
                             try:
                                 out_line = u' '.join(unicode(part)
                                                      for part in out_line)
