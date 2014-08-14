@@ -72,6 +72,7 @@ def pyle_evaluate(expressions=None, modules=(), inplace=False, files=None, print
 
         out_buf = sys.stdout if not inplace else StringIO.StringIO()
 
+        out_line = None
         with (open(file, 'rb') if not hasattr(file, 'read') else file) as in_file:
             for num, line in enumerate(in_file.readlines()):
                 was_whole_line = False
