@@ -31,14 +31,14 @@ class TestPyle(unittest.TestCase):
         p = Popen(cmd, stdout=PIPE, stdin=PIPE, stderr=STDOUT)
         return p.communicate(input=input_string)[0]
 
-    def testFirst5(self):
+    def test_first_five_lines(self):
         output = self.std_run('line[:5]', test_input_a)
 
         self.assertEquals(output, """A few
 dance
 short""")
 
-    def testFirst5FromFile(self):
+    def tes_first_five_line_from_file(self):
         tmp_file = tempfile.NamedTemporaryFile(delete=False)
         try:
             tmp_file.write(test_input_a)
@@ -71,39 +71,39 @@ short""")
             os.unlink(tmp_file.name)
         return output
 
-    def testFirst5InPlace(self):
+    def test_first_five_in_place(self):
         output = self.in_place_run('line[:5]', test_input_a)
         self.assertEquals(output, """A few
 dance
 short""")
 
-    def testAliens(self):
+    def test_aliens_substitution(self):
         output = self.in_place_run(r"re.sub(r'alien(s|)?', r'angel\1', line)", test_input_b)
         self.assertEquals(output, """
 This line protected by cowboys.
 An angel? This box is FILLED with angels!"
 """)
 
-    def testUtf(self):
+    def test_unicode_input(self):
         test_str = 'Segla f\xf6rutan vind\n'
         output = self.std_run('line', test_str)
         self.assertEquals(output, test_str)
 
-    def testBinary(self):
+    def test_binary_input(self):
         test_str = '\x00\x01\x02'
         output = self.std_run('line', test_str)
         self.assertEquals(output, test_str)
 
-    def testErrorMessage(self):
+    def test_error_message(self):
         output = self.std_run('int(line)', "1\nPylo\n3\n")
         self.assertEquals(output, "1\nAt <stdin>:1 ('Pylo'): `int(line)`: invalid literal for int() with base 10: 'Pylo'\n3\n")
 
-    def testTraceback(self):
+    def test_traceback(self):
         output = self.std_run('int(line)', "1\nPylo\n3\n", print_traceback=True)
         self.assertTrue("invalid literal for int() with base 10" in output)
         self.assertTrue("Traceback (most recent call last)" in output)
 
-    def testMultiExpr(self):
+    def test_multiple_expressions(self):
         output = self.std_run('re.sub("a", "B", line)', 'aaa',
                               more_code=['re.sub("B", "c", line)', 'line[:2]'])
         self.assertEquals(output, 'cc')
