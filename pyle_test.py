@@ -7,6 +7,7 @@ import os
 import sys
 import tempfile
 import unittest
+from functools import reduce
 
 test_input_a = """A few characters
 dance on the

@@ -94,6 +94,9 @@ With Pyle:
 
 If you find the Python code more readable, Pyle is for you.
 
+## Tests ##
+
+    python -m unittest discover -p pyle_test.py
 
 ## License ##
 
