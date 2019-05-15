@@ -1,27 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""
-
-Pyle allows you to use Python as a replacement for command line tools such
-as `sed` or `perl`. It reads its standard input and evaluates each line with
-the expression specified, outputting the results on standard out.
-Optionally, it can operate on a list of filenames instead in which case each
-file is read and processed in order.
-
-The following variables are available in the global scope:
-
-    * `line`:       the current input line being processed
-    * `words`:      line split by whitespace
-    * `num`:        line number
-    * `filename`:   the name of the current file
-
-The following modules are imported by default:
-
-    * `re`:         Python regular expressions
-    * `sh`:         the [`sh` module (formerly `pbs`)](https://pypi.python.org/pypi/sh)
-
-The sh module makes it easy to run additional commands from within the expression.
+"""Pyle makes it easy to use Python as a replacement for command line tools such as `sed` or `perl`.
 
 """
 
@@ -43,8 +23,7 @@ STANDARD_MODULES = {
 def truncate_ellipsis(line, length=30):
     """Truncate a line to the specified length followed by ``...`` unless its shorter than length already."""
 
-    l = len(line)
-    return line if l < length else line[:length - 3] + "..."
+    return line if len(line) < length else line[:length - 3] + "..."
 
 
 def pyle_evaluate(expressions=None, modules=(), inplace=False, files=None, print_traceback=False):
@@ -87,9 +66,11 @@ def pyle_evaluate(expressions=None, modules=(), inplace=False, files=None, print
                                  for word in re.split(r'\s+', line)
                                  if word]
                         eval_locals.update({
-                            'line': line, 'words': words,
-                            'filename': in_file.name, 'num': num
-                            })
+                            'line': line,
+                            'words': words,
+                            'filename': in_file.name,
+                            'num': num
+                        })
 
                         out_line = eval(expr, eval_globals, eval_locals)
 
@@ -100,8 +81,7 @@ def pyle_evaluate(expressions=None, modules=(), inplace=False, files=None, print
                         # output each item space separated.
                         if not isinstance(out_line, str) and not isinstance(out_line, unicode):
                             try:
-                                out_line = u' '.join(unicode(part)
-                                                     for part in out_line)
+                                out_line = u' '.join(unicode(part) for part in out_line)
                             except:
                                 # Guess it wasn't a list after all.
                                 out_line = unicode(out_line)
@@ -145,8 +125,8 @@ def pyle(argv=None):
 
     args = parser.parse_args() if not argv else parser.parse_args(argv)
 
-    pyle_evaluate(args.expressions, args.modules, args.inplace, args.files,
-                  args.traceback)
+    pyle_evaluate(args.expressions, args.modules, args.inplace, args.files, args.traceback)
+
 
 if __name__ == '__main__':
     pyle()

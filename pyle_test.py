@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 
 from subprocess import Popen, PIPE, STDOUT
-import tempfile
-import unittest
+import operator
 import os
 import sys
-import operator
+import tempfile
+import unittest
 
 test_input_a = """A few characters
 dance on the

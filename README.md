@@ -6,6 +6,8 @@ Use Python for sed or perl-like shell scripts
 
 Pyle makes it easy to use Python as a replacement for command line tools such as `sed` or `perl`.
 
+Pyle reads its standard input and evaluates each line with the expression specified, outputting the results on standard out.
+
 To print the first 20 characters of each line of a file:
 
     cat README.md | pyle -e "line[:20]"
@@ -22,7 +24,7 @@ Perform an in-place string substitution, overwriting the original file with the 
 
     pyle -ie "re.sub(r'alien(s|)?', r'ghost\1', line)" TextAboutAliens.md
 
-The special variable`line` is the current line (if the input is multiple lines, the pyle expression is executed once per line). The variable `words` is the current line split by whitespace. To print just the URLs in an Apache access log (the seventh "word" in the line):
+The special variable`line` is the current line (each line of input is evaluated through the given expression(s)). The variable `words` is the current line split by whitespace. To print just the URLs in an Apache access log (the seventh "word" in the line):
 
     tail access_log | pyle -e "words[6]"
 
@@ -56,6 +58,26 @@ Pyle imports the [sh](https://github.com/amoffat/sh) module by default, which en
 
     pip install pyle
 
+## Documentation ##
+
+This file and `pyle --help`.
+
+The following variables are available in the global scope:
+
+    * `line`:       the current input line being processed
+    * `words`:      line split by whitespace
+    * `num`:        line number
+    * `filename`:   the name of the current file
+
+The following modules are imported by default:
+
+    * `re`:         Python regular expressions
+    * `sh`:         the [`sh` module](https://github.com/amoffat/sh)
+
+The sh module makes it easy to run additional commands from within the expression.
+
+Pyle can operate on a list of filenames in which case each file is read in order and evaluated line by line.
+
 ## Why Pyle? ##
 
 Some of us are just simply awful at remembering the `sed`, `perl` or even `bash` syntax but feel right at home with Python. Python code is often a little more verbose but what good is saving characters if you can't remember what they do?
@@ -72,9 +94,6 @@ With Pyle:
 
 If you find the Python code more readable, Pyle is for you.
 
-## Documentation ##
-
-This file and `pyle --help`.
 
 ## License ##
 
