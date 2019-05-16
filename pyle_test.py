@@ -1,13 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+
+
+from functools import reduce
 from subprocess import Popen, PIPE, STDOUT
 import operator
 import os
 import sys
 import tempfile
 import unittest
-from functools import reduce
 
 test_input_a = """A few characters
 dance on the
@@ -20,8 +26,8 @@ An alien? This box is FILLED with aliens!"
 
 
 class TestPyle(unittest.TestCase):
-    def std_run(self, code, input_string, more_code=None, modules=None,
-                print_traceback=False):
+    @staticmethod
+    def std_run(code, input_string, more_code=None, modules=None, print_traceback=False):
         cmd = [sys.executable, 'pyle.py', '-e', code]
         if more_code:
             cmd.extend(reduce(operator.add, [['-e', c] for c in more_code]))
@@ -29,8 +35,9 @@ class TestPyle(unittest.TestCase):
             cmd += ['-m'] + [modules]
         if print_traceback:
             cmd += ['--traceback']
+
         p = Popen(cmd, stdout=PIPE, stdin=PIPE, stderr=STDOUT)
-        return p.communicate(input=input_string)[0]
+        return p.communicate(input=input_string.encode('utf-8'))[0].decode('utf-8')
 
     def test_first_five_lines(self):
         output = self.std_run('line[:5]', test_input_a)
@@ -39,14 +46,14 @@ class TestPyle(unittest.TestCase):
 dance
 short""")
 
-    def tes_first_five_line_from_file(self):
+    def test_first_five_line_from_file(self):
         tmp_file = tempfile.NamedTemporaryFile(delete=False)
         try:
-            tmp_file.write(test_input_a)
+            tmp_file.write(test_input_a.encode('utf-8'))
             tmp_file.close()
 
             p = Popen([sys.executable, 'pyle.py', '-e', 'line[:5]', tmp_file.name], stdout=PIPE, stdin=PIPE, stderr=STDOUT)
-            output = p.communicate()[0]
+            output = p.communicate()[0].decode('utf-8')
 
             self.assertEquals(output, """A few
 dance
@@ -56,20 +63,22 @@ short""")
 
     def in_place_run(self, code, input_string):
         tmp_file = tempfile.NamedTemporaryFile(delete=False)
+
         try:
-            tmp_file.write(input_string)
+            tmp_file.write(input_string.encode('utf-8'))
             tmp_file.close()
 
             p = Popen([sys.executable, 'pyle.py', '-ie', code, tmp_file.name], stdout=PIPE, stdin=PIPE, stderr=STDOUT)
-            output = p.communicate()[0]
+            output = p.communicate()[0].decode('utf-8')
 
+            self.maxDiff = 10000
             self.assertEquals(output, '')
 
             with open(tmp_file.name, 'rb') as tmp_file_2:
-                output = tmp_file_2.read()
-
+                output = tmp_file_2.read().decode('utf-8')
         finally:
             os.unlink(tmp_file.name)
+
         return output
 
     def test_first_five_in_place(self):

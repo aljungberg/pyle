@@ -96,7 +96,13 @@ If you find the Python code more readable, Pyle is for you.
 
 ## Tests ##
 
-    python -m unittest discover -p pyle_test.py
+Tests need to be run both in Python 2 and Python 3. Best way to do that is to have one virtual environment for each. If you use virtualenv wrapper, something like this:
+
+    workon pyle2
+    python2 -3 -Werror -m unittest discover -p pyle_test.py
+
+    workon pyle3
+    python3 -m unittest discover -p pyle_test.py
 
 ## License ##
 

@@ -4,15 +4,24 @@
 """Pyle makes it easy to use Python as a replacement for command line tools such as `sed` or `perl`.
 
 """
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
 
-__version__ = "0.3"
+from future import standard_library
+standard_library.install_aliases()
+from future.utils import string_types
 
 import argparse
-import cStringIO as StringIO
+import io
 import re
 import sh
 import sys
 import traceback
+
+__version__ = "0.4"
+
 
 STANDARD_MODULES = {
     're': re,
@@ -43,17 +52,20 @@ def pyle_evaluate(expressions=None, modules=(), inplace=False, files=None, print
         # Default 'do nothing' program
         expressions = ['line']
 
+    encoding = sys.getdefaultencoding()
+
     files = files or ['-']
     eval_locals = {}
     for file in files:
         if file == '-':
             file = sys.stdin
 
-        out_buf = sys.stdout if not inplace else StringIO.StringIO()
+        out_buf = sys.stdout if not inplace else io.StringIO()
 
         out_line = None
-        with (open(file, 'rb') if not hasattr(file, 'read') else file) as in_file:
+        with (io.open(file, 'r', encoding=encoding) if not hasattr(file, 'read') else file) as in_file:
             for num, line in enumerate(in_file.readlines()):
+
                 was_whole_line = False
                 if line[-1] == '\n':
                     was_whole_line = True
@@ -79,12 +91,12 @@ def pyle_evaluate(expressions=None, modules=(), inplace=False, files=None, print
 
                         # If the result is something list-like or iterable,
                         # output each item space separated.
-                        if not isinstance(out_line, str) and not isinstance(out_line, unicode):
+                        if not isinstance(out_line, string_types):
                             try:
-                                out_line = u' '.join(unicode(part) for part in out_line)
+                                out_line = u' '.join(str(part) for part in out_line)
                             except:
                                 # Guess it wasn't a list after all.
-                                out_line = unicode(out_line)
+                                out_line = str(out_line)
 
                         line = out_line
                 except Exception as e:
@@ -101,8 +113,9 @@ def pyle_evaluate(expressions=None, modules=(), inplace=False, files=None, print
                     out_buf.write(out_line)
                     if was_whole_line:
                         out_buf.write('\n')
+
         if inplace:
-            with open(file, 'wb') as out_file:
+            with io.open(file, 'w', encoding=encoding) as out_file:
                 out_file.write(out_buf.getvalue())
             out_buf.close()
 
