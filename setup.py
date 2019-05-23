@@ -7,7 +7,7 @@ from setuptools import setup
 
 setup(
     name='pyle',
-    version='0.4',
+    version='0.4.1',
     description='Use Python for shell one-liners.',
     author='Alexander Ljungberg',
     author_email='aljungberg@slevenbits.com',

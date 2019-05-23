@@ -20,7 +20,7 @@ import sh
 import sys
 import traceback
 
-__version__ = "0.4"
+__version__ = "0.4.1"
 
 
 STANDARD_MODULES = {
