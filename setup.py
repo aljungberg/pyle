@@ -36,7 +36,6 @@ such as ``sed`` or ``perl``.
 See https://github.com/aljungberg/pyle for more information.
 """,
       install_requires=[
-        'argparse >= 1.2.1',
         'sh >= 1.12.14',
         'future >= 0.17.1',
       ],

@@ -56,6 +56,8 @@ Pyle imports the [sh](https://github.com/amoffat/sh) module by default, which en
 
 ## Installation ##
 
+Pyle is compatible with Python 2.7 and Python 3.4 and above.
+
     pip install pyle
 
 ## Documentation ##
